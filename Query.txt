@@ -1,0 +1,75 @@
+--User AAQ1 having multiple profiles
+insert into profile values ('AAQ1', 'PAAQ2', 'Alley');
+insert into profile values ('AAQ1', 'PAAQ3', 'Alley');
+insert into profile values ('AAQ1', 'PAAQ4', 'Alley');
+
+--Insert data into watchlist_movies
+insert into watchlist_movie values ('M111', 'PAAQ2', '4-JUL-2006');
+insert into watchlist_movie values ('M108', 'PAAQ2', '14-AUG-2010');
+insert into watchlist_movie values ('M104', 'PAAQ2', '2-JAN-2012');
+insert into watchlist_movie values ('M103', 'PAAQ2', '11-FEB-2000');
+
+--Insert data into watchlist_series
+insert into watchlist_series values ('S102', 'PAAQ2', '4-JUL-2011');
+insert into watchlist_series values ('S104', 'PAAQ2', '14-JAN-2014');
+insert into watchlist_series values ('S108', 'PAAQ2', '5-DEC-2012');
+insert into watchlist_series values ('S112', 'PAAQ2', '19-OCT-2010');
+
+----------------------------------------------------------------------------------------
+
+--Movie Watchlist
+select distinct C.F_NAME,C.L_NAME,  M.Name, M.Rating, M.Genre as "Movie Genre"
+from watchlist_series WS, watchlist_movie WM, Series S, Movie M, Profile P, CUSTOMER C
+where M.Movie_ID=WM.Movie_ID and  P.PROFILE_ID=WM.PROFILE_ID and C.USER_ID=P.USER_ID and C.F_NAME='Alley' and C.L_NAME='Smith';
+
+
+--Series Watchlist 
+select  distinct C.F_NAME,C.L_NAME,   S.Name, S.Rating, S.Genre as "Series Genre"
+from watchlist_series WS, watchlist_movie WM, Series S, Movie M, Profile P, CUSTOMER C
+where S.Series_ID=WS.Series_ID and P.PROFILE_ID=WM.PROFILE_ID and C.USER_ID=P.USER_ID and C.F_NAME='Alley' and C.L_NAME='Smith';
+
+--Customer details
+select *
+from customer;
+
+--User Profile
+select C.F_NAME,C.L_NAME,C.PLAN,C.USER_ID,P.PROFILE_ID
+from Customer C, Profile P
+where P.USER_ID = C.USER_ID and C.F_NAME='Alley';
+
+--Movies relased between given year
+select NAME ,RATING,RELEASED_DATE
+from Movie
+where RELEASED_DATE BETWEEN '01-JAN-2000' and '31-DEC-2016'
+order by RELEASED_DATE;
+
+
+--Total users
+select count(*) "Number of Customer" from CUSTOMER;
+
+--Total Movies
+select count(*) "Number of Movie" from MOVIE;
+
+--Total Series
+select count(*) as "Number of Series" from SERIES;
+
+--Series and Episodes
+select S.NAME,E.NAME,S.GENRE,S.RATING,S.RELEASED_DATE
+from Series S, Episode E
+where S.SERIES_ID = E.SERIES_ID and S.NAME='Kramer'
+order by S.RELEASED_DATE;
+
+--Movies by Released Date
+select NAME,GENRE,RATING,RELEASED_DATE as "Released Date"
+from Movie
+order by RELEASED_DATE;
+
+--Movie by Rating
+select NAME,GENRE,RATING,RELEASED_DATE as "Released Date"
+from Movie
+order by RATING;
+
+--Movie Having Rating greater than the average rating of total movies
+select NAME,GENRE,RATING
+from Movie where RATING > (select avg(rating) from MOVIE)
+order by RATING;
